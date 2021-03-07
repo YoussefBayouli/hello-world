@@ -1,5 +1,11 @@
 version: 2.1
 
+commands:
+  print_pipeline_id:
+    description: "a step that prints the Circle CI Workflow ID from its environment variable to the console"
+    steps:
+          - run: echo << $CIRCLE_WORKFLOW_ID >>
+
 jobs:
   save_hello_world_output:
     docker:
@@ -10,6 +16,12 @@ jobs:
           root: ~/
           paths:
             - output.txt
+
+  print_pipeline_id: 
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - run: echo $CIRCLE_WORKFLOW_ID        
 
   print_output_file:
     docker:
@@ -26,3 +38,4 @@ workflows:
       - print_output_file:
           requires:
             - save_hello_world_output
+      - print_pipeline_id:
